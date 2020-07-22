@@ -40,9 +40,16 @@ export function insertNewLatencyInfo(client: Client, siteIdToLatency: Map<number
   let dbQuery = `Insert into status_schema.latencies (site_id, capture_time, latency_ms, http_status_code) values `;
   siteIdToLatency.forEach(({responseTime, statusCode}, appId) => {
     console.log(responseTime, statusCode);
-    const value = `(${appId}, CURRENT_TIMESTAMP, ${responseTime}, ${statusCode}) `;
+    const value = `(${appId}, CURRENT_TIMESTAMP, ${responseTime}, ${statusCode}), `;
     dbQuery = dbQuery + value;
   });
 
+  const lastComma = dbQuery.lastIndexOf(',');
+  dbQuery = dbQuery.substring(0, lastComma);
+  client.query(dbQuery);
+}
+
+export function insertNewSite(client: Client, site: any) {
+  const dbQuery = `Insert into status_schema.sites (name, url) values ('${site.name}', '${site.url}')`;
   client.query(dbQuery);
 }

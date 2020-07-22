@@ -3,6 +3,7 @@ import { Client } from 'pg';
 import url from 'url';
 import { IncomingMessage } from 'http';
 import * as DBQueries from '../database/database-queries';
+import { sinceParamToInterval } from '../utils/utility';
 
 export class Streamer {
 
@@ -29,22 +30,9 @@ export class Streamer {
 
       if (urlWithStringQuery.query) {
         const queryParams = urlWithStringQuery.query.split('=');
-        const latencyIntervalIndex = queryParams.findIndex(str => str === 'since') + 1
+        const latencyIntervalIndex = queryParams.findIndex(str => str === 'since') + 1;
         const sinceParam = queryParams[latencyIntervalIndex];
-
-        switch(sinceParam) {
-          case '10minutes':
-            latencyInterval = '10 minutes';
-            break;
-          case '24H':
-            latencyInterval = '24 hours';
-            break;
-          case '1WEEK':
-            latencyInterval = '7 days';
-            break;
-          default:
-            latencyInterval = '2 minutes';
-        }
+        latencyInterval = sinceParamToInterval(sinceParam)
       }
 
       DBQueries.getSingleSite(this.dbClient, dbClientId, latencyInterval).then((site) => {

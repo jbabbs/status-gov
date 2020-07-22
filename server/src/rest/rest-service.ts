@@ -19,4 +19,8 @@ export class RestService {
     const site = await DatabaseQueries.getSingleSite(this.client, id, latencyInterval);
     return site;
   }
+
+  insertNewSite(site: any) {
+    DatabaseQueries.insertNewSite(this.client, site);
+  }
 }
