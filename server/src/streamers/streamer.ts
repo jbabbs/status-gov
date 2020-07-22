@@ -4,7 +4,6 @@ import url from 'url';
 import { IncomingMessage } from 'http';
 import * as DBQueries from '../database/database-queries';
 import { sinceParamToInterval } from '../utils/utility';
-
 export class Streamer {
 
   private websocketServer: WebSocket.Server;
@@ -18,10 +17,6 @@ export class Streamer {
     this.websocketServer = new WebSocket.Server({ port: 9898 })
 
     this.websocketServer.on('connection', (ws: WebSocket, req: IncomingMessage) => {
-      ws.on('message', message => {
-        console.log(`Received message => ${message}`)
-        console.log(req);
-      });
 
       const urlWithStringQuery = url.parse(req.url);
 
