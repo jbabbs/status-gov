@@ -32,3 +32,13 @@ export async function getAllLatenciesForSite(client: Client, siteId: number) {
   const latencyQueryList = await client.query('SELECT * from status_schema.latencies WHERE site_id = $1', [siteId]);
   return latencyQueryList.rows;
 }
+
+export function insertNewLatencyInfo(client: Client, siteIdToLatency: Map<number, number>) {
+  let dbQuery = `Insert into status_schema.latencies (site_id, capture_time, latency_ms) values `;
+  siteIdToLatency.forEach((elapsedTime, appId) => {
+    const value = `(${appId}, CURRENT_TIMESTAMP, ${elapsedTime}) `;
+    dbQuery = dbQuery + value;
+  });
+
+  client.query(dbQuery);
+}
