@@ -1,8 +1,8 @@
 import { ILatency } from './latency';
 
 export interface ISite {
-  id: number;
+  id?: number;
   name: string;
   url: string;
-  latencies: Array<ILatency>;
+  latencies?: Array<ILatency>;
 }

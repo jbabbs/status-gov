@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ISite } from '../../../../interface/site';
+import { SinceType, SiteService } from '../services/site.service';
 
 @Component({
   selector: 'app-latency-graph',
@@ -8,109 +9,43 @@ import { ISite } from '../../../../interface/site';
 })
 export class LatencyGraphComponent implements OnInit, OnDestroy {
 
-  view: any[] = [700, 300];
+  sites: Array<any>;
+  selectedSiteId: number|string;
+  span: SinceType = '10minutes';
 
-  // options
-  legend: boolean = false;
-  showLabels: boolean = true;
-  animations: boolean = true;
-  xAxis: boolean = true;
-  yAxis: boolean = true;
-  showYAxisLabel: boolean = true;
-  showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Time';
-  yAxisLabel: string = 'Latency (ms)';
-  timeline: boolean = true;
-
-  colorScheme = {
-    domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
-  };
-
-  latencyData = [
-    {
-      "name": "Latency",
-      "series": [
-        {
-          "name": this.toTimeOfDay(1595436544 - 10),
-          "value": 150
-        },
-        {
-          "name": this.toTimeOfDay(1595436544 - 5),
-          "value": 50
-        },
-        {
-          "name": this.toTimeOfDay(1595436544),
-          "value": 100
-        }
-      ]
-    }
-  ];
-
-  latencies = [
-    { id: 2, capture_time: 1595436544 - 10, latency_ms: 100, http_status_code: 200 },
-    { id: 3, capture_time: 1595436544 - 5, latency_ms: 150, http_status_code: 200 },
-    { id: 4, capture_time: 1595436544, latency_ms: 50, http_status_code: 200 },
-  ];
-
+  latencyData;
   webSocket: WebSocket;
-  lastUpdate: string = this.toTimeOfDay(new Date().getTime() / 1000);
+  lastUpdate = '';
 
-  constructor() {
+  constructor(private siteService: SiteService) {
   }
 
   ngOnInit() {
-    // this.latencyData = [
-    //   {
-    //     name: 'Latency',
-    //     series: this.latencies.map(l => {
-    //       return {
-    //         name: this.toTimeOfDay(l.capture_time),
-    //         value:  l.latency_ms,
-    //       };
-    //     })
-    //   }
-    // ];
-
-    this.webSocket = new WebSocket('ws://localhost:9898/sites/1');
-    this.webSocket.onopen = (() => {
-      console.log('sock opened');
-    });
-
-    this.webSocket.onmessage = ((ev: MessageEvent) => {
-      console.log('got event', ev);
-      const dat: ISite = JSON.parse(ev.data);
-      console.log(dat);
-
-      this.latencyData = [
-        {
-          name: 'Latency',
-          series: dat.latencies.map(l => {
-            return {
-              name: this.toTimeOfDay(l.capture_time),
-              value:  l.latency_ms,
-            };
-          })
-        }
-      ];
-
-      this.lastUpdate = this.toTimeOfDay(new Date().getTime() / 1000);
+    this.siteService.getAllSites().subscribe(sites => {
+      this.sites = sites;
+      this.selectedSiteId = this.sites[0].id;
+      this.openSocket();
     });
   }
 
   ngOnDestroy() {
-    this.webSocket.close();
+    this.closeSocket();
   }
 
-  onSelect(data): void {
+  openSocket() {
+    this.webSocket = new WebSocket('ws://localhost:9898/sites/' + this.selectedSiteId + 'since=' + this.span);
 
+    this.webSocket.onmessage = ((ev: MessageEvent) => {
+      const site: ISite = JSON.parse(ev.data);
+      this.setLatencyDataForSite(site);
+    });
   }
 
-  onActivate(data): void {
-
-  }
-
-  onDeactivate(data): void {
-
+  closeSocket() {
+    if (this.webSocket) {
+      this.webSocket.close();
+    }
+    this.webSocket = null;
   }
 
   toTimeOfDay(stamp: number) {
@@ -134,14 +69,46 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
   }
 
   onRealTimeClick() {
-
+    this.span = '10minutes';
+    this.openSocket();
   }
 
   on24Click() {
-
+    this.closeSocket();
+    this.span = '24H';
+    this.updateSiteData();
   }
 
   onWeekClick() {
+    this.closeSocket();
+    this.span = '1WEEK';
+    this.updateSiteData();
+  }
 
+  onSiteChange($event) {
+    this.closeSocket();
+    this.span = '10minutes';
+    this.updateSiteData();
+  }
+
+  setLatencyDataForSite(site: ISite) {
+    this.latencyData = [
+      {
+        name: 'Latency',
+        series: site.latencies.map(l => {
+          return {
+            name: this.toTimeOfDay(l.capture_time),
+            value:  l.latency_ms,
+          };
+        })
+      }
+    ];
+    this.lastUpdate = this.toTimeOfDay(new Date().getTime() / 1000);
+  }
+
+  updateSiteData() {
+    this.siteService.getSiteById(this.selectedSiteId, this.span).subscribe((site: ISite) => {
+      this.setLatencyDataForSite(site);
+    });
   }
 }

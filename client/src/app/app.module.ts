@@ -16,12 +16,16 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LatencyGraphComponent } from './latency-graph/latency-graph.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { AddsiteComponent } from './addsite/addsite.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    LatencyGraphComponent
+    LatencyGraphComponent,
+    AddsiteComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -31,6 +35,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     SamHeaderModule,
     AppRoutingModule,
     NgxChartsModule,
+    HttpClientModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
