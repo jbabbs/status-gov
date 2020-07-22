@@ -21,9 +21,10 @@ export class Streamer {
         console.log(req);
       });
 
-      setTimeout(() => {
-        const siteInfo = DBQueries.getSingleSite(this.dbClient, 1);
-        ws.send(JSON.stringify(siteInfo));
+      setInterval(() => {
+        DBQueries.getSingleSite(this.dbClient, 1).then((site) => {
+          ws.send(JSON.stringify(site));
+        });
       }, 5000);
     })
   }

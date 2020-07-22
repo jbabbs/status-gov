@@ -11,9 +11,9 @@ import * as DBQueries from '../database/database-queries';
   }
 
   async startPinging() {
-    // this.pingAllUrls();
+    this.pingAllUrls();
     setInterval(() => {
-      // this.pingAllUrls();
+      this.pingAllUrls();
     }, 5000)
   }
 
