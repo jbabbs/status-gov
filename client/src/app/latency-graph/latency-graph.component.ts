@@ -79,6 +79,7 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
     this.webSocket.onmessage = ((ev: MessageEvent) => {
       console.log('got event', ev);
       const dat: ISite = JSON.parse(ev.data);
+      console.log(dat);
 
       this.latencyData = [
         {
@@ -120,7 +121,7 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
       var months_arr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
       // Convert timestamp to milliseconds
-      var date = new Date(unixtimestamp * 1000);
+      var date = new Date(stamp);
       // var year = date.getFullYear();
       // var month = months_arr[date.getMonth()];
       // var day = date.getDate();
