@@ -63,7 +63,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "sam-design-system-challenge:build"
+            "browserTarget": "sam-design-system-challenge:build",
+            "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
