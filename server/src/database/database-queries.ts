@@ -1,4 +1,6 @@
-import { Client } from 'pg';
+import { Client, QueryResult } from 'pg';
+import { ISite } from 'statusgov-interface/site';
+import { ILatency } from 'statusgov-interface/latency';
 
 export function initializeDatabase(client: Client) {
   client.query('CREATE SCHEMA IF NOT EXISTS status_schema');
@@ -11,16 +13,16 @@ export function initializeDatabase(client: Client) {
      latency_ms int NOT NULL)`);
 }
 
-export async function getAllSites(client: Client) {
+export async function getAllSites(client: Client): Promise<ISite[]> {
   const queryList = await client.query('SELECT * from status_schema.sites');
   return queryList.rows;
 }
 
-export async function getSingleSite(client: Client, siteId: number, latencyInterval?: string) {
-  const sitesList = await client.query('SELECT * from status_schema.sites where id = $1', [siteId]);
+export async function getSingleSite(client: Client, siteId: number, latencyInterval?: string): Promise<ISite> {
+  const sitesList: QueryResult<ISite> = await client.query('SELECT * from status_schema.sites where id = $1', [siteId]);
 
   if (sitesList.rows.length) {
-    const latencyList = await getAllLatenciesForSite(client, siteId, latencyInterval);
+    const latencyList: ILatency[] = await getAllLatenciesForSite(client, siteId, latencyInterval);
     const singleSite = sitesList.rows[0];
     singleSite.latencies = latencyList;
     return singleSite;
@@ -29,7 +31,7 @@ export async function getSingleSite(client: Client, siteId: number, latencyInter
   }
 }
 
-export async function getAllLatenciesForSite(client: Client, siteId: number, latencyInterval = '2 minutes') {
+export async function getAllLatenciesForSite(client: Client, siteId: number, latencyInterval = '2 minutes'): Promise<ILatency[]> {
 
   const latencyQueryList = await client.query(`SELECT * from status_schema.latencies WHERE site_id = $1 AND capture_time >= NOW() - INTERVAL '${latencyInterval}'`,
     [siteId]);
@@ -49,7 +51,7 @@ export function insertNewLatencyInfo(client: Client, siteIdToLatency: Map<number
   client.query(dbQuery);
 }
 
-export function insertNewSite(client: Client, site: any) {
+export function insertNewSite(client: Client, site: ISite) {
   const dbQuery = `Insert into status_schema.sites (name, url) values ('${site.name}', '${site.url}')`;
   client.query(dbQuery);
 }

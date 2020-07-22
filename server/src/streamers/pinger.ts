@@ -1,6 +1,7 @@
 import { Client } from "pg";
 import request from 'request';
 import * as DBQueries from '../database/database-queries';
+import { ISite } from 'statusgov-interface/site';
 
  // Continuously pings relevant apis
  export class Pinger {
@@ -20,7 +21,7 @@ import * as DBQueries from '../database/database-queries';
   // Get all sites from sites table, ping each url, then
   // store latency information into latency table
   private async pingAllUrls() {
-    const sites = await this.getAllSites();
+    const sites: ISite[] = await this.getAllSites();
 
     if (sites.length === 0) {
       return;
@@ -33,7 +34,7 @@ import * as DBQueries from '../database/database-queries';
       promises.push(new Promise((resolve, reject) => {
         request.get({url: site.url, time: true}, (error: any, response: any) => {
           if (error) {
-            requestMap.set(site.id, {responseTime: 0, statusCode: response.statusCode});
+            requestMap.set(site.id, {responseTime: 0, statusCode: 400});
           } else {
             requestMap.set(site.id, {responseTime: response.elapsedTime, statusCode: response.statusCode});
           }
@@ -49,7 +50,7 @@ import * as DBQueries from '../database/database-queries';
   }
 
   private async getAllSites() {
-    const allSites = await DBQueries.getAllSites(this.client);
+    const allSites: ISite[] = await DBQueries.getAllSites(this.client);
     return allSites;
   }
  }
