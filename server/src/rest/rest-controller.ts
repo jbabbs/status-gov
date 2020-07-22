@@ -1,6 +1,8 @@
 import { Application } from 'express';
 import { RestService } from './rest-service';
 import { Client } from 'pg';
+import { sinceParamToInterval } from '../utils/utility';
+import bodyParser from 'body-parser';
 
 export class RestController {
 
@@ -10,11 +12,13 @@ export class RestController {
   constructor(app: Application, databaseClient: Client) {
     this.app = app;
     this.restService = new RestService(databaseClient);
+    this.app.use(bodyParser.json())
   }
 
   setupEndpoints() {
     this.setupSitesEndpoint();
     this.setupSingelSiteEndpoint();
+    this.setupCreateSiteEndpoint();
   }
 
   private setupSitesEndpoint() {
@@ -29,23 +33,23 @@ export class RestController {
     this.app.get( "/sites/:id", ( req, res ) => {
       const siteId = Number.parseInt(req.params.id, 10);
       const sinceParam = req.query.since;
-      let latencyInterval;
-      switch(sinceParam) {
-        case '10minutes':
-          latencyInterval = '10 minutes';
-          break;
-        case '24H':
-          latencyInterval = '24 hours';
-          break;
-        case '1WEEK':
-          latencyInterval = '7 days';
-          break;
-        default:
-          latencyInterval = '2 minutes';
-      }
+      const latencyInterval = sinceParamToInterval(sinceParam as string)
       this.restService.getSingleSite(siteId, latencyInterval).then((site) => {
         res.send( site );
       });
     });
+  }
+
+  private setupCreateSiteEndpoint() {
+    this.app.post('/sites', (req, res, next) => {
+      console.log(req.body);
+      const site = req.body;
+      if (!site.name || ! site.url) {
+        next('Invalid form body');
+      } else {
+        this.restService.insertNewSite(site);
+        res.send();
+      }
+    })
   }
 }
