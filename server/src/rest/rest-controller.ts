@@ -46,7 +46,8 @@ export class RestController {
       console.log(req.body);
       const site: ISite = req.body;
       if (!site.name || ! site.url) {
-        next('Invalid form body');
+        res.statusMessage = 'Invalid Form Body';
+        res.status(400).end();
       } else {
         this.restService.insertNewSite(site);
         res.send();
