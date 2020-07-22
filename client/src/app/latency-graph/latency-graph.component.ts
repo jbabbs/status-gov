@@ -132,4 +132,16 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
       // Display date time in MM-dd-yyyy h:m:s format
       return /* month+'-'+day+'-'+year+' '+ */hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
   }
+
+  onRealTimeClick() {
+
+  }
+
+  on24Click() {
+
+  }
+
+  onWeekClick() {
+
+  }
 }

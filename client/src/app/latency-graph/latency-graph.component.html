@@ -1,4 +1,24 @@
-<div style="display: block" class="clearfix">
+<div style="margin-bottom: 1rem;">
+  <fieldset class="usa-fieldset">
+    <legend class="usa-sr-only">Historical figures 2</legend>
+    <div class="usa-radio">
+      <input class="usa-radio__input" id="1" type="radio" checked name="range" (click)="onRealTimeClick()">
+      <label class="usa-radio__label" for="1">Real-time</label>
+    </div>
+    <div class="usa-radio">
+      <input class="usa-radio__input" id="2" type="radio" name="range" (click)="on24Click()">
+      <label class="usa-radio__label" for="2">Past 24 Hours</label>
+    </div>
+    <div class="usa-radio">
+      <input class="usa-radio__input" id="3" type="radio" name="range" (click)="onWeekClick()">
+      <label class="usa-radio__label" for="3">Past Week</label>
+    </div>
+  </fieldset>
+</div>
+<div style="margin-bottom: 1rem;">
+  <i>Last Update: {{lastUpdate}}</i>
+</div>
+<div class="clearfix">
   <ngx-charts-line-chart
     [view]="view"
     [scheme]="colorScheme"
@@ -16,7 +36,4 @@
     (deactivate)="onDeactivate($event)"
   >
   </ngx-charts-line-chart>
-</div>
-<div>
-  <i>Last Update: {{lastUpdate}}</i>
 </div>
