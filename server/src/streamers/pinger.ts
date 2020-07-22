@@ -11,9 +11,9 @@ import * as DBQueries from '../database/database-queries';
   }
 
   async startPinging() {
-    this.pingAllUrls();
+    // this.pingAllUrls();
     setInterval(() => {
-      this.pingAllUrls();
+      // this.pingAllUrls();
     }, 5000)
   }
 
@@ -25,7 +25,7 @@ import * as DBQueries from '../database/database-queries';
     if (sites.length === 0) {
       return;
     }
-    
+
     const requestMap = new Map<number, number>();
     const promises: Promise<request.Request>[] = [];
 
