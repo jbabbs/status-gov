@@ -1,6 +1,7 @@
 import WebSocket from 'ws';
 import { Client } from 'pg';
 import { IncomingMessage } from 'http';
+import * as DBQueries from '../database/database-queries';
 
 export class Streamer {
 
@@ -20,6 +21,10 @@ export class Streamer {
         console.log(req);
       });
 
+      setTimeout(() => {
+        const siteInfo = DBQueries.getSingleSite(this.dbClient, 1);
+        ws.send(JSON.stringify(siteInfo));
+      }, 5000);
     })
   }
 }
