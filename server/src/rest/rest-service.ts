@@ -14,4 +14,9 @@ export class RestService {
     const sites = await DatabaseQueries.getAllSites(this.client);
     return sites;
   }
+
+  async getSingleSite(id: number) {
+    const site = await DatabaseQueries.getSingleSite(this.client, id);
+    return site;
+  }
 }
