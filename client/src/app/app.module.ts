@@ -13,10 +13,15 @@ import { SamHeaderModule } from './common/sam-header/sam-header.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
+import { LatencyGraphComponent } from './latency-graph/latency-graph.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    LatencyGraphComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -24,12 +29,13 @@ import { AppComponent } from './app.component';
     BrowserModule,
     SamFooterModule,
     SamHeaderModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgxChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { 
+export class AppModule {
   constructor() {
    library.add(fas, sds);
   }
