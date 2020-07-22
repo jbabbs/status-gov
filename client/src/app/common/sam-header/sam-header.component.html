@@ -1,0 +1,135 @@
+<div class="bg-black padding-05">
+  <div class="grid-container text-base-light font-sans-3xs">
+      <div class="grid-row">
+        <div class="grid-fill">
+             This Website is a prototype intended to support usability testing only.
+        </div>
+    </div>
+  </div>
+</div>
+<div
+  class="usa-overlay"
+  [class.is-visible]="mobileNavActive"
+  (click)="closeMobileNav()">      
+</div>
+<header class="usa-header usa-header--extended">
+    <div class="usa-navbar">
+      <div class="usa-logo" id="extended-mega-logo">
+        <em class="usa-logo__text">  
+            <a [routerLink]="['/']" title="Home" aria-label="Home">
+                <img class="sds-header__logo" [src]="locationStrategy.getBaseHref() + 'assets/img/logo-sam.svg'" alt="SAM.gov home" />
+            </a>
+        </em>
+      </div>
+      <button #usaNavOpen class="usa-menu-btn" (click)="openMobileNav()">
+      <fa-layers [fixedWidth]="true" size="3x">
+        <fa-icon
+          [icon]="['fas', 'square']"
+          [classes]="['text-primary']"
+        ></fa-icon>
+        <fa-icon
+          [icon]="['sds', 'bars']"
+          [classes]="['icon-bars']"
+          transform="shrink-6"
+        ></fa-icon>
+        <fa-layers-counter
+          *ngIf="model.signedIn"
+          [classes]="['icon-layers-counter']"
+        ></fa-layers-counter>
+      </fa-layers>
+      <span class="usa-sr-only">Menu</span>
+    </button>
+  </div>
+  <nav
+    aria-label="Primary navigation"
+    class="usa-nav"
+    (keydown.esc)="closeMobileNav()"
+    (animationend)="navAnimationEnd()"
+    [class.is-visible]="mobileNavActive"
+    [cdkTrapFocus]="mobileNavActive"
+  >
+    <div class="usa-nav__inner">
+        <button #usaNavClose class="usa-nav__close" (click)="closeMobileNav()">
+            <fa-layers [fixedWidth]="true" size="lg">
+              <fa-icon
+                [icon]="['fas', 'circle']"
+                [inverse]="true"
+                transform="grow-2"
+              ></fa-icon>
+              <fa-icon [icon]="['fas', 'times']" transform="shrink-6"></fa-icon>
+            </fa-layers>
+            <span class="usa-sr-only">Close</span>
+        </button>
+        <ul class="usa-nav__primary usa-accordion">
+        	<li class="usa-nav__primary-item">
+			    <a class="usa-nav__link" [class.usa-current]="sectionId == 'home'" ><span>Home</span></a>
+			</li>
+    		<li class="usa-nav__primary-item">
+    			<a class="usa-nav__link" [class.usa-current]="sectionId == 'search'" ><span>Search</span></a>
+   			</li>
+   		    <li class="usa-nav__primary-item">
+    			<a class="usa-nav__link" [class.usa-current]="sectionId == 'databank'" ><span>Databank</span></a>
+    		</li>
+    		<li class="usa-nav__primary-item">
+    			<a class="usa-nav__link" [class.usa-current]="sectionId == 'dataservices'" ><span>Data Services</span></a>
+    		</li>
+    		<li class="usa-nav__primary-item">
+    			<a class="usa-nav__link" [class.usa-current]="sectionId == 'help'" ><span>Help</span></a>
+    		</li>
+    	</ul>
+    <div class="usa-nav__secondary">
+  <ul class="usa-nav__secondary-links"><li *ngIf="model.signedIn" class="usa-nav__secondary-item"> 
+        <a
+            [attr.id]="requests"
+            [attr.class]="sectionId == 'requests' ? 'usa-current' : ''"
+          >
+         <fa-layers [fixedWidth]="true">
+            <fa-icon [icon]="['sds', 'request']"></fa-icon>
+            <fa-layers-counter 
+              [classes]="['icon-layers-counter']"
+            ></fa-layers-counter>
+          </fa-layers>
+          <span class="sds-nav__secondary-item-text">Requests</span></a>
+    </li><li *ngIf="model.signedIn" class="usa-nav__secondary-item"> 
+        <a
+            [attr.id]="messages"
+            [attr.class]="sectionId == 'messages' ? 'usa-current' : ''"
+          >
+         <fa-layers [fixedWidth]="true">
+            <fa-icon [icon]="['sds', 'messages']"></fa-icon>
+          </fa-layers>
+          <span class="sds-nav__secondary-item-text">Notifications</span></a>
+    </li><li *ngIf="model.signedIn" class="usa-nav__secondary-item"> 
+        <a
+            [attr.id]="workspace"
+            [attr.class]="sectionId == 'workspace' ? 'usa-current' : ''"
+          >
+         <fa-layers [fixedWidth]="true">
+            <fa-icon [icon]="['sds', 'workspace']"></fa-icon>
+          </fa-layers>
+          <span class="sds-nav__secondary-item-text">Workspace</span></a>
+    </li><li *ngIf="!model.signedIn" class="usa-nav__secondary-item"> 
+        <a
+            [attr.id]="signIn"
+            href="javascript:void(0)"
+            (click)="model.signIn('/')"
+          >
+         <fa-layers [fixedWidth]="true">
+            <fa-icon [icon]="['sds', 'log-in']"></fa-icon>
+          </fa-layers>
+          <span class="sds-nav__secondary-item-text">Sign In</span></a>
+    </li><li *ngIf="model.signedIn" class="usa-nav__secondary-item"> 
+        <a
+            [attr.id]="signOut"
+            href="javascript:void(0)"
+            (click)="model.signOut()"
+          >
+         <fa-layers [fixedWidth]="true">
+            <fa-icon [icon]="['sds', 'log-out']"></fa-icon>
+          </fa-layers>
+          <span class="sds-nav__secondary-item-text">Sign Out</span></a>
+    </li></ul>
+</div>
+</div>
+  </nav>
+</header>
