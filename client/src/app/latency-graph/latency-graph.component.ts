@@ -71,7 +71,7 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
     //   }
     // ];
 
-    this.webSocket = new WebSocket('ws://localhost/sites/1');
+    this.webSocket = new WebSocket('ws://localhost:9898/sites/1');
     this.webSocket.onopen = (() => {
       console.log('sock opened');
     });
