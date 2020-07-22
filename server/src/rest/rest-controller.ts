@@ -29,8 +29,21 @@ export class RestController {
     this.app.get( "/sites/:id", ( req, res ) => {
       const siteId = Number.parseInt(req.params.id, 10);
       const sinceParam = req.query.since;
-      console.log(sinceParam);
-      this.restService.getSingleSite(siteId).then((site) => {
+      let latencyInterval;
+      switch(sinceParam) {
+        case '10minutes':
+          latencyInterval = '10 minutes';
+          break;
+        case '24H':
+          latencyInterval = '24 hours';
+          break;
+        case '1WEEK':
+          latencyInterval = '7 days';
+          break;
+        default:
+          latencyInterval = '2 minutes';
+      }
+      this.restService.getSingleSite(siteId, latencyInterval).then((site) => {
         res.send( site );
       });
     });

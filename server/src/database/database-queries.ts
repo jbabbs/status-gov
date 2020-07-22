@@ -16,11 +16,11 @@ export async function getAllSites(client: Client) {
   return queryList.rows;
 }
 
-export async function getSingleSite(client: Client, siteId: number) {
+export async function getSingleSite(client: Client, siteId: number, latencyInterval?: string) {
   const sitesList = await client.query('SELECT * from status_schema.sites where id = $1', [siteId]);
 
   if (sitesList.rows.length) {
-    const latencyList = await getAllLatenciesForSite(client, siteId);
+    const latencyList = await getAllLatenciesForSite(client, siteId, latencyInterval);
     const singleSite = sitesList.rows[0];
     singleSite.latencies = latencyList;
     return singleSite;
@@ -29,8 +29,10 @@ export async function getSingleSite(client: Client, siteId: number) {
   }
 }
 
-export async function getAllLatenciesForSite(client: Client, siteId: number) {
-  const latencyQueryList = await client.query('SELECT * from status_schema.latencies WHERE site_id = $1 AND capture_time >= NOW() - INTERVAL \'1 minutes\'', [siteId]);
+export async function getAllLatenciesForSite(client: Client, siteId: number, latencyInterval = '2 minutes') {
+
+  const latencyQueryList = await client.query(`SELECT * from status_schema.latencies WHERE site_id = $1 AND capture_time >= NOW() - INTERVAL '${latencyInterval}'`,
+    [siteId]);
   return latencyQueryList.rows;
 }
 

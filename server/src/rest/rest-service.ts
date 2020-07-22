@@ -15,8 +15,8 @@ export class RestService {
     return sites;
   }
 
-  async getSingleSite(id: number) {
-    const site = await DatabaseQueries.getSingleSite(this.client, id);
+  async getSingleSite(id: number, latencyInterval?: string) {
+    const site = await DatabaseQueries.getSingleSite(this.client, id, latencyInterval);
     return site;
   }
 }
