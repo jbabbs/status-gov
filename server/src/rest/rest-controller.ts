@@ -28,6 +28,8 @@ export class RestController {
   private setupSingelSiteEndpoint() {
     this.app.get( "/sites/:id", ( req, res ) => {
       const siteId = Number.parseInt(req.params.id, 10);
+      const sinceParam = req.query.since;
+      console.log(sinceParam);
       this.restService.getSingleSite(siteId).then((site) => {
         res.send( site );
       });

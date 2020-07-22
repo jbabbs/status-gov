@@ -26,16 +26,16 @@ import * as DBQueries from '../database/database-queries';
       return;
     }
 
-    const requestMap = new Map<number, number>();
+    const requestMap = new Map<number, {responseTime: number, statusCode: number}>();
     const promises: Promise<request.Request>[] = [];
 
     sites.forEach(site => {
       promises.push(new Promise((resolve, reject) => {
         request.get({url: site.url, time: true}, (error: any, response: any) => {
           if (error) {
-            requestMap.set(site.id, 0);
+            requestMap.set(site.id, {responseTime: 0, statusCode: response.statusCode});
           } else {
-            requestMap.set(site.id, response.elapsedTime);
+            requestMap.set(site.id, {responseTime: response.elapsedTime, statusCode: response.statusCode});
           }
 
           console.log(`${site.name}: ${requestMap.get(site.id)}`);

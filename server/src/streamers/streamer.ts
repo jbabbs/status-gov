@@ -21,6 +21,8 @@ export class Streamer {
         console.log(req);
       });
 
+      console.log(ws.url);
+
       setInterval(() => {
         DBQueries.getSingleSite(this.dbClient, 1).then((site) => {
           ws.send(JSON.stringify(site));

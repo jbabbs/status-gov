@@ -7,6 +7,7 @@ export function initializeDatabase(client: Client) {
      id bigserial primary key,
      site_id int REFERENCES status_schema.sites (id),
      capture_time timestamp NOT NULL,
+     http_status_code int NOT NULL,
      latency_ms int NOT NULL)`);
 }
 
@@ -29,14 +30,15 @@ export async function getSingleSite(client: Client, siteId: number) {
 }
 
 export async function getAllLatenciesForSite(client: Client, siteId: number) {
-  const latencyQueryList = await client.query('SELECT * from status_schema.latencies WHERE site_id = $1', [siteId]);
+  const latencyQueryList = await client.query('SELECT * from status_schema.latencies WHERE site_id = $1 AND capture_time >= NOW() - INTERVAL \'1 minutes\'', [siteId]);
   return latencyQueryList.rows;
 }
 
-export function insertNewLatencyInfo(client: Client, siteIdToLatency: Map<number, number>) {
-  let dbQuery = `Insert into status_schema.latencies (site_id, capture_time, latency_ms) values `;
-  siteIdToLatency.forEach((elapsedTime, appId) => {
-    const value = `(${appId}, CURRENT_TIMESTAMP, ${elapsedTime}) `;
+export function insertNewLatencyInfo(client: Client, siteIdToLatency: Map<number, {responseTime: number, statusCode: number}>) {
+  let dbQuery = `Insert into status_schema.latencies (site_id, capture_time, latency_ms, http_status_code) values `;
+  siteIdToLatency.forEach(({responseTime, statusCode}, appId) => {
+    console.log(responseTime, statusCode);
+    const value = `(${appId}, CURRENT_TIMESTAMP, ${responseTime}, ${statusCode}) `;
     dbQuery = dbQuery + value;
   });
 
