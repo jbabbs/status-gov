@@ -10,6 +10,7 @@ To run the Angular stack:
 `cd client`
 `npm install`
 `npm run start`
+Navigate to localhost:5206
 
 To run the NodeJS stack, please make sure you have postgres up first.
 `cd server`
