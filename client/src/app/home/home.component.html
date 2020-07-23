@@ -1,14 +1,12 @@
 <div class="grid-container" style="margin-top: 3rem;">
-  <div class="grid-row" style="margin-bottom: 2rem;">
-    <div class="grid-col-6">
-      <div style="font-size: larger; float: right; padding-right: 1rem;">
-        Status:
-      </div>
-    </div>
-    <div class="grid-col-6" style="font-size: x-large;">
-      OK
-    </div>
+
+  <app-latency-graph *ngIf="sites && sites.length" [sites]="sites"></app-latency-graph>
+
+  <div *ngIf="sites && !sites.length">
+    <p>You currently are not monitoring any applications. Please add a new website to monitor.</p>
+    <button class="usa-button" [routerLink]="['addsite']">Add site</button>
   </div>
-  <app-latency-graph></app-latency-graph>
 </div>
+
+
 

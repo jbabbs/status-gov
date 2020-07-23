@@ -1,3 +1,19 @@
+<div class="grid-row" style="margin-bottom: 2rem;">
+  <div class="grid-col-6">
+    <div style="font-size: larger; float: right; padding-right: 1rem;">
+      Status:
+    </div>
+  </div>
+  <div class="grid-col-6" style="font-size: x-large;" 
+    [ngClass]="{
+      'green': siteStatus === 'OK', 
+      'red': siteStatus === 'NOT OK', 
+      'gray': siteStatus === 'UNKNOWN'}"
+    >
+    {{siteStatus}}
+  </div>
+</div>
+
 <div style="margin-bottom: 1rem;">
   <label class="usa-label" for="options">Site</label>
   <select class="usa-select" name="options" id="options" [(ngModel)]="selectedSiteId" (ngModelChange)="onSiteChange($event)">

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { ISite } from 'statusgov-interface/site';
 import { SinceType, SiteService } from '../services/site.service';
 
@@ -9,7 +9,8 @@ import { SinceType, SiteService } from '../services/site.service';
 })
 export class LatencyGraphComponent implements OnInit, OnDestroy {
 
-  sites: Array<any>;
+  @Input()
+  sites: Array<ISite>;
   selectedSiteId: number|string;
   span: SinceType = '10minutes';
 
@@ -17,15 +18,20 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
   webSocket: WebSocket;
   lastUpdate = '';
 
+  selectedSite: ISite;
+  siteStatus: 'OK' | 'NOT OK' | 'UNKNOWN';
+
   constructor(private siteService: SiteService) {
   }
 
   ngOnInit() {
-    this.siteService.getAllSites().subscribe(sites => {
-      this.sites = sites;
-      this.selectedSiteId = this.sites[0].id;
-      this.openSocket();
-    });
+    if (!this.sites || !this.sites.length) {
+      return;
+    }
+
+    this.selectedSiteId = this.sites[0].id;
+    this.selectedSite = this.sites[0];
+    this.openSocket();
   }
 
   ngOnDestroy() {
@@ -85,9 +91,10 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
     this.updateSiteData();
   }
 
-  onSiteChange($event) {
+  onSiteChange(siteId: number) {
     this.closeSocket();
     this.span = '10minutes';
+    this.selectedSite = this.sites.find(site => site.id === this.selectedSiteId);
     this.updateSiteData();
   }
 
@@ -104,11 +111,25 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
       }
     ];
     this.lastUpdate = this.toTimeOfDay(new Date().getTime() / 1000);
+    this.updateSiteStatus(site);
   }
 
   updateSiteData() {
     this.siteService.getSiteById(this.selectedSiteId, this.span).subscribe((site: ISite) => {
       this.setLatencyDataForSite(site);
     });
+  }
+
+  updateSiteStatus(site: ISite) {
+    if (site.latencies.length === 0) {
+      this.siteStatus = 'UNKNOWN';
+    } else {
+      const lastKnownPing = site.latencies[site.latencies.length - 1].latency_ms;
+      if (lastKnownPing === 0 ) {
+        this.siteStatus = 'NOT OK'
+      } else {
+        this.siteStatus = 'OK'
+      }
+    }
   }
 }
