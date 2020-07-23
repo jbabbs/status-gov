@@ -1,41 +1,58 @@
+<div class="h-center" style="text-align: center; margin-bottom: 1.5rem;">
+  <span style="font-size: larger; padding-right: .3rem;">
+    Status:
+  </span>
+  <span style="font-size: x-large;">
+    {{ status() }}
+  </span>
+  <span class="circle" title="< 300ms = Good, 300-600ms = OK, 600+ms = Bad">?</span>
+</div>
 <div style="margin-bottom: 1rem;">
-  <label class="usa-label" for="options">Site</label>
-  <select class="usa-select" name="options" id="options" [(ngModel)]="selectedSiteId" (ngModelChange)="onSiteChange($event)">
+  <label style="margin-bottom: 1rem;" class="usa-label h-center" for="options">Select a site</label>
+  <select class="usa-select h-center" name="options" id="options" [(ngModel)]="selectedSiteId" (ngModelChange)="onSiteChange($event)">
     <option *ngFor="let site of sites" [value]="site.id">{{site.name}}</option>
   </select>
-  <button class="usa-button" [routerLink]="['addsite']">Add site</button>
-  <fieldset class="usa-fieldset">
-    <legend>Time span</legend>
-    <div class="usa-radio">
-      <input [(ngModel)]="span" [value]="'10minutes'" class="usa-radio__input" id="1" type="radio" name="range" (click)="onRealTimeClick()">
-      <label class="usa-radio__label" for="1">Real-time</label>
-    </div>
-    <div class="usa-radio">
-      <input [(ngModel)]="span" [value]="'24H'" class="usa-radio__input" id="2" type="radio" name="range" (click)="on24Click()">
-      <label class="usa-radio__label" for="2">Past 24 Hours</label>
-    </div>
-    <div class="usa-radio">
-      <input [(ngModel)]="span" [value]="'1WEEK'" class="usa-radio__input" id="3" type="radio" name="range" (click)="onWeekClick()">
-      <label class="usa-radio__label" for="3">Past Week</label>
-    </div>
-  </fieldset>
+  <button style="margin-top: 1rem" class="usa-button h-center" [routerLink]="['addsite']">Add site</button>
 </div>
-<div class="clearfix">
-  <ngx-charts-line-chart
-    [view]="[700, 300]"
-    [scheme]="{domain: ['#5AA454']}"
-    [legend]="false"
-    [showXAxisLabel]="true"
-    [showYAxisLabel]="true"
-    [xAxis]="true"
-    [yAxis]="true"
-    [xAxisLabel]="'Time'"
-    [yAxisLabel]="'Latency (ms)'"
-    [timeline]="false"
-    [results]="latencyData"
-  >
-  </ngx-charts-line-chart>
+<div class="grid-row">
+  <div class="grid-col-2">
+    <fieldset class="usa-fieldset">
+      <legend>Span</legend>
+      <div class="usa-radio">
+        <input [(ngModel)]="span" [value]="'10minutes'" class="usa-radio__input" id="1" type="radio" name="range" (click)="onRealTimeClick()">
+        <label class="usa-radio__label" for="1">Real-time</label>
+      </div>
+      <div class="usa-radio">
+        <input [(ngModel)]="span" [value]="'24H'" class="usa-radio__input" id="2" type="radio" name="range" (click)="on24Click()">
+        <label class="usa-radio__label" for="2">Past 24 Hours</label>
+      </div>
+      <div class="usa-radio">
+        <input [(ngModel)]="span" [value]="'1WEEK'" class="usa-radio__input" id="3" type="radio" name="range" (click)="onWeekClick()">
+        <label class="usa-radio__label" for="3">Past Week</label>
+      </div>
+    </fieldset>
+  </div>
+  <div class="grid-col-10">
+    <div class="clearfix">
+      <ngx-charts-line-chart
+        [view]="[700, 300]"
+        [scheme]="{domain: ['#5AA454']}"
+        [legend]="false"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxis]="true"
+        [yAxis]="true"
+        [xAxisLabel]="'Time'"
+        [yAxisLabel]="'Latency (ms)'"
+        [timeline]="false"
+        [results]="latencyData"
+        [animations]="false"
+      >
+      </ngx-charts-line-chart>
+    </div>
+  </div>
 </div>
+
 <div style="margin-bottom: 1rem;">
   <i>Last Update: {{lastUpdate}}</i>
 </div>

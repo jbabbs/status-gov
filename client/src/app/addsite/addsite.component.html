@@ -1,13 +1,15 @@
 <div class="grid-container">
-  <h1>Add site</h1>
-  <form class="usa-form">
-    <label class="usa-label" for="input-type-text">Name</label>
-    <input [(ngModel)]="name" class="usa-input" id="input-type-text" name="input-type-text" type="text">
+  <div style="padding: 2rem 0">
+    <h1>Add site</h1>
+    <form class="usa-form">
+      <label class="usa-label" for="input-type-text">Name</label>
+      <input [(ngModel)]="name" class="usa-input" id="input-type-text" name="input-type-text" type="text">
 
-    <label class="usa-label" for="input-focus">URL</label>
-    <input [(ngModel)]="url" class="usa-input usa-focus" id="input-focus" name="input-focus" type="text">
+      <label class="usa-label" for="input-focus">URL</label>
+      <input [(ngModel)]="url" class="usa-input usa-focus" id="input-focus" name="input-focus" type="text">
 
-    <button class="usa-button" (click)="onAddSiteClick()">Add Site</button>
-  </form>
+      <button class="usa-button" (click)="onAddSiteClick()">Add Site</button>
+    </form>
+  </div>
 </div>
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ISite } from '../../../../interface/site';
+import { ISite } from 'statusgov-interface/site';
 
 export type SinceType = '24H'|'1WEEK'|'10minutes';
 

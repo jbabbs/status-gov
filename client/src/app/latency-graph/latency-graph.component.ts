@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ISite } from '../../../../interface/site';
+import { ISite } from 'statusgov-interface/site';
 import { SinceType, SiteService } from '../services/site.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-latency-graph',
@@ -12,10 +13,10 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
   sites: Array<any>;
   selectedSiteId: number|string;
   span: SinceType = '10minutes';
-
   latencyData;
   webSocket: WebSocket;
   lastUpdate = '';
+  mostRecentLatency: number;
 
   constructor(private siteService: SiteService) {
   }
@@ -48,24 +49,12 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
     this.webSocket = null;
   }
 
-  toTimeOfDay(stamp: number) {
-      // Unixtimestamp
-      var unixtimestamp = stamp;
+  toTimeOfDayLong(stamp) {
+    return moment(stamp).format('e LTS');
+  }
 
-      // Months array
-      var months_arr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-      // Convert timestamp to milliseconds
-      var date = new Date(stamp);
-      // var year = date.getFullYear();
-      // var month = months_arr[date.getMonth()];
-      // var day = date.getDate();
-      var hours = date.getHours();
-      var minutes = "0" + date.getMinutes();
-      var seconds = "0" + date.getSeconds();
-
-      // Display date time in MM-dd-yyyy h:m:s format
-      return /* month+'-'+day+'-'+year+' '+ */hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+  toTimeOfDayShort(stamp) {
+    return moment(stamp).format('LTS');
   }
 
   onRealTimeClick() {
@@ -92,23 +81,41 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
   }
 
   setLatencyDataForSite(site: ISite) {
+    const format = (time) => {
+      return this.span === '10minutes' ? this.toTimeOfDayShort(time) : this.toTimeOfDayLong(time);
+    };
     this.latencyData = [
       {
         name: 'Latency',
         series: site.latencies.map(l => {
           return {
-            name: this.toTimeOfDay(l.capture_time),
+            name: format(l.capture_time),
             value:  l.latency_ms,
           };
         })
       }
     ];
-    this.lastUpdate = this.toTimeOfDay(new Date().getTime() / 1000);
+    const len = site.latencies.length;
+    this.mostRecentLatency = site.latencies[len - 1].latency_ms;
+    this.lastUpdate = this.toTimeOfDayShort(moment());
   }
 
   updateSiteData() {
     this.siteService.getSiteById(this.selectedSiteId, this.span).subscribe((site: ISite) => {
       this.setLatencyDataForSite(site);
     });
+  }
+
+  status() {
+    if (!this.mostRecentLatency) {
+      return '';
+    }
+    if (this.mostRecentLatency < 300) {
+      return 'Good';
+    } else if (this.mostRecentLatency < 600) {
+      return 'OK';
+    } else {
+      return 'Bad';
+    }
   }
 }
