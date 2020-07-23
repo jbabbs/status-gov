@@ -34,6 +34,7 @@ export class StatusDatabase {
   }
 
   private async initializeDB() {
-    initializeDatabase(this.client);
+    console.log('Initializing db');
+    await initializeDatabase(this.client);
   }
 }

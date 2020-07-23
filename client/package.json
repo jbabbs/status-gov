@@ -48,7 +48,8 @@
     "statusgov-interface": "^1.0.3",
     "ts-md5": "^1.2.7",
     "tslib": "^1.9.0",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "statusgov-interface": "^1.0.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.800.0",
