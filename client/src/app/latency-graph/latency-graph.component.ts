@@ -20,7 +20,7 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
   mostRecentLatency: number;
 
   selectedSite: ISite;
-  siteStatus: 'OK' | 'NOT OK' | 'UNKNOWN';
+  siteStatus: 'GOOD' | 'OK' | 'NOT OK' | 'UNKNOWN';
 
   constructor(private siteService: SiteService) {
   }
@@ -105,6 +105,7 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
     const len = site.latencies.length;
     this.mostRecentLatency = site.latencies[len - 1].latency_ms;
     this.lastUpdate = this.toTimeOfDayShort(moment());
+    this.updateStatus();
   }
 
   updateSiteData() {
@@ -113,16 +114,18 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
     });
   }
 
-  status() {
+  updateStatus() {
     if (!this.mostRecentLatency) {
-      return '';
+      this.siteStatus = 'UNKNOWN';
     }
-    if (this.mostRecentLatency < 300) {
-      return 'Good';
-    } else if (this.mostRecentLatency < 600) {
-      return 'OK';
+    if (this.mostRecentLatency === 0) {
+      this.siteStatus = 'NOT OK';
+    } else if (this.mostRecentLatency < 300) {
+      this.siteStatus = 'GOOD';
+    } else if (this.mostRecentLatency < 1000) {
+      this.siteStatus = 'OK';
     } else {
-      return 'Bad';
+      this.siteStatus = 'NOT OK';
     }
   }
 }

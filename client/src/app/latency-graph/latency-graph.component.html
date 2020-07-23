@@ -2,10 +2,16 @@
   <span style="font-size: larger; padding-right: .3rem;">
     Status:
   </span>
-  <span style="font-size: x-large;">
-    {{ status() }}
+  <span style="font-size: x-large;"
+    [ngClass]="{
+      'good': siteStatus === 'GOOD',
+      'ok': siteStatus === 'OK',
+      'not-ok': siteStatus === 'NOT OK',
+      'unknown': siteStatus === 'UNKNOWN'
+    }">
+    {{ siteStatus}}
   </span>
-  <span class="circle" title="< 300ms = Good, 300-600ms = OK, 600+ms = Bad">?</span>
+  <span class="circle" title="< 300ms = Good, 300-1000ms = OK, 1000+ms = NOT OK">?</span>
 </div>
 <div style="margin-bottom: 1rem;">
   <label style="margin-bottom: 1rem;" class="usa-label h-center" for="options">Select a site</label>
