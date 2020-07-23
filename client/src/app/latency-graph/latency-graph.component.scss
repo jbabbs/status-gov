@@ -1,11 +1,15 @@
-.green {
-  color: #70e17b;
+.h-center {
+  display: block;
+  margin: 0 auto;
 }
 
-.red {
-  color: #fb5a47;
-}
-
-.gray {
-  color: #162e51;
+.circle {
+  background-color: darkblue;
+  display: inline-block;
+  text-align: center;
+  color: white;
+  border-radius: 50%;
+  line-height: 1rem;
+  width: 1rem;
+  height: 1rem;
 }

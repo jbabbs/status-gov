@@ -18,7 +18,7 @@ export class AddsiteComponent implements OnInit {
   }
 
   onAddSiteClick() {
-    const site: ISite = {
+    const site: any = {
       name: this.name,
       url: this.url,
     } as ISite;
