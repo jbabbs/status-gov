@@ -13,14 +13,8 @@ services:
     image: server
     ports:
       - "3000:3000"
+      - "9898:9898"
     environment: 
       DATABASE: database
     depends_on:
       - database
-  frontend:
-    build: ./client/
-    image: client
-    environment:
-      BACKEND: backend
-    ports:
-      - "5206:5206"

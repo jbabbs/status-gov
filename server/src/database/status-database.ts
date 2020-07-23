@@ -22,7 +22,7 @@ export class StatusDatabase {
     while(retries) {
       try {
           await this.client.connect();
-          console.log('Connected to Databses');
+          console.log('Connected to Databse');
           break;
       } catch (err) {
           retries--;
