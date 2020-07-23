@@ -40,7 +40,7 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
   }
 
   openSocket() {
-    this.webSocket = new WebSocket('ws://localhost:9898/sites/' + this.selectedSiteId + 'since=' + this.span);
+    this.webSocket = new WebSocket('ws://localhost:9898/sites/' + this.selectedSiteId + '?since=' + this.span);
 
     this.webSocket.onmessage = ((ev: MessageEvent) => {
       const site: ISite = JSON.parse(ev.data);
@@ -85,6 +85,7 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
     this.span = '10minutes';
     this.selectedSite = this.sites.find(site => site.id === this.selectedSiteId);
     this.updateSiteData();
+    this.openSocket()
   }
 
   setLatencyDataForSite(site: ISite) {
@@ -103,6 +104,11 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
       }
     ];
     const len = site.latencies.length;
+    
+    if (!len) {
+      return;
+    }
+
     this.mostRecentLatency = site.latencies[len - 1].latency_ms;
     this.lastUpdate = this.toTimeOfDayShort(moment());
     this.updateStatus();

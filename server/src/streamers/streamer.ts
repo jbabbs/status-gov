@@ -22,12 +22,11 @@ export class Streamer {
 
       const dbClientId = Number.parseInt(urlWithStringQuery.pathname.split('/')[2], 10);
       let latencyInterval = '2 minutes';
-
       if (urlWithStringQuery.query) {
         const queryParams = urlWithStringQuery.query.split('=');
         const latencyIntervalIndex = queryParams.findIndex(str => str === 'since') + 1;
         const sinceParam = queryParams[latencyIntervalIndex];
-        latencyInterval = sinceParamToInterval(sinceParam)
+        latencyInterval = sinceParamToInterval(sinceParam);
       }
 
       DBQueries.getSingleSite(this.dbClient, dbClientId, latencyInterval).then((site) => {
