@@ -7,7 +7,7 @@ different websites
 For local development, please install the latest versions of node and postgres. In postgres, you must create
 a database called test_db.
 To run the Angular stack:
-`cd client`\ 
+`cd client`\
 `npm install`\
 `npm run start`\
 Navigate to localhost:5206\
