@@ -9,7 +9,7 @@ services:
     volumes:
       - ./pgdata:/Library/PostgreSQL/10/data # persist data even if container shuts down
   backend:
-    build: ./server/
+    build: .
     image: server
     ports:
       - "3000:3000"
