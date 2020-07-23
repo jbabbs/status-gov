@@ -22,7 +22,7 @@ export class StatusDatabase {
     while(retries) {
       try {
           await this.client.connect();
-          console.log('Connected to Databse');
+          console.log('Connected to Databses');
           break;
       } catch (err) {
           retries--;
@@ -34,6 +34,7 @@ export class StatusDatabase {
   }
 
   private async initializeDB() {
-    initializeDatabase(this.client);
+    console.log('Initializing db');
+    await initializeDatabase(this.client);
   }
 }

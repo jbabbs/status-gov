@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SiteService } from '../services/site.service';
-import { ISite } from '../../../../interface/site';
+import { ISite } from 'statusgov-interface/site';
 import { Router } from '@angular/router';
 
 @Component({
@@ -21,7 +21,7 @@ export class AddsiteComponent implements OnInit {
     const site: ISite = {
       name: this.name,
       url: this.url,
-    };
+    } as ISite;
     this.siteService.createSite(site).subscribe(() => {
       this.router.navigate(['/']);
     });

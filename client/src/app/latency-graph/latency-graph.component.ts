@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ISite } from '../../../../interface/site';
+import { ISite } from 'statusgov-interface/site';
 import { SinceType, SiteService } from '../services/site.service';
 
 @Component({

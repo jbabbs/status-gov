@@ -11,26 +11,25 @@ process.env.DATABASE_NAME = process.env.DATABASE_NAME ? process.env.DATABASE_NAM
 const app = express();
 const port = 3000; // default port to listen
 
-// Initialize database
-const statusDatabase = new StatusDatabase();
-statusDatabase.startDatabase();
+async function initializeApplication() {
+    // Initialize database
+    const statusDatabase = new StatusDatabase();
+    await statusDatabase.startDatabase();
 
-// Initialize endpoints
-const restController = new RestController(app, statusDatabase.getClient());
-restController.setupEndpoints();
+    // Initialize endpoints
+    const restController = new RestController(app, statusDatabase.getClient());
+    restController.setupEndpoints();
 
-const streamer = new Streamer(statusDatabase.getClient());
-streamer.initialize();
+    const streamer = new Streamer(statusDatabase.getClient());
+    streamer.initialize();
 
-const continuousPinger = new Pinger(statusDatabase.getClient());
-continuousPinger.startPinging();
+    const continuousPinger = new Pinger(statusDatabase.getClient());
+    continuousPinger.startPinging();
 
-// define a route handler for the default home page
-app.get( "/", ( req, res ) => {
-    res.send( "Hello world!" );
-} );
+    // start the Express server
+    app.listen( port, () => {
+        console.log( `server started at http://localhost:${ port }` );
+    } );
+}
 
-// start the Express server
-app.listen( port, () => {
-    console.log( `server started at http://localhost:${ port }` );
-} );
+initializeApplication();

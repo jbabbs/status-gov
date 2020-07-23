@@ -2,10 +2,10 @@ import { Client, QueryResult } from 'pg';
 import { ISite } from 'statusgov-interface/site';
 import { ILatency } from 'statusgov-interface/latency';
 
-export function initializeDatabase(client: Client) {
-  client.query('CREATE SCHEMA IF NOT EXISTS status_schema');
-  client.query('CREATE TABLE IF NOT EXISTS status_schema.sites (id bigserial primary key, name varchar(50) NOT NULL, url varchar(1000) NOT NULL)');
-  client.query(`CREATE TABLE IF NOT EXISTS status_schema.latencies (
+export async function initializeDatabase(client: Client) {
+  await client.query('CREATE SCHEMA IF NOT EXISTS status_schema');
+  await client.query('CREATE TABLE IF NOT EXISTS status_schema.sites (id bigserial primary key, name varchar(50) NOT NULL, url varchar(1000) NOT NULL)');
+  await client.query(`CREATE TABLE IF NOT EXISTS status_schema.latencies (
      id bigserial primary key,
      site_id int REFERENCES status_schema.sites (id),
      capture_time timestamp NOT NULL,
@@ -32,7 +32,6 @@ export async function getSingleSite(client: Client, siteId: number, latencyInter
 }
 
 export async function getAllLatenciesForSite(client: Client, siteId: number, latencyInterval = '2 minutes'): Promise<ILatency[]> {
-
   const latencyQueryList = await client.query(`SELECT * from status_schema.latencies WHERE site_id = $1 AND capture_time >= NOW() - INTERVAL '${latencyInterval}'`,
     [siteId]);
   return latencyQueryList.rows;
