@@ -20,5 +20,5 @@ To run the NodeJS stack, please make sure you have postgres up first.\
 A docker compose file is also setup for starting up the backend stack of this application. Starting the server
 through docker container will not require postgres running on local machine. To start backend using docker:\
 `cd server`\
-`docker-compose up -d`
+`docker-compose up -d`\
 You may then follow instructions on starting the Angular application.
