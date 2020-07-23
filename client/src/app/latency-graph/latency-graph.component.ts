@@ -50,7 +50,7 @@ export class LatencyGraphComponent implements OnInit, OnDestroy {
   }
 
   toTimeOfDayLong(stamp) {
-    return moment(stamp).format('e LTS');
+    return moment(stamp).format('ddd LTS');
   }
 
   toTimeOfDayShort(stamp) {
